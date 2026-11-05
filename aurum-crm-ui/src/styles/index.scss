@@ -1,0 +1,126 @@
+/**
+ * 全局样式
+ *
+ * 只放全局性的东西；组件私有样式写在各自的 <style scoped> 里。
+ *
+ * 下面的设计令牌全部提取自原型《客户关系管理系统-CRM》（AxureShop）的页面 CSS，
+ * 改主题色只需改 :root 里的变量 —— 布局组件不再硬编码色值。
+ */
+
+// ---------- 设计令牌 ----------
+:root {
+  // ---- 布局尺寸 ----
+  // 原型：顶栏 #u3765 = 1920x56，左侧栏 #u3737 = 200x1024 @(0,56)
+  --crm-navbar-height: 56px;
+  --crm-subnav-width: 200px;
+  // 内容区从 left=224 起 = 侧栏 200 + 间距 24
+  --crm-content-gap: 24px;
+  // 侧栏菜单项：原型每项 200x50，纵向自 top=76 起每 54px 一项（50 高 + 4 间隔）
+  --crm-subnav-item-height: 50px;
+  --crm-subnav-item-gap: 4px;
+
+  // ---- 品牌色 ----
+  --crm-primary: #2c6ddb;
+  --crm-primary-light: #e6f4ff; // 选中行 / 高亮底
+
+  // ---- 文字 ----
+  --crm-text-primary: #172b4d; // 原型中出现频率最高的文字色
+  --crm-text-regular: #344563;
+  --crm-text-secondary: #6b778c;
+
+  // ---- 边框与分隔 ----
+  --crm-border: #dfe1e6;
+  --crm-border-light: #ebecf0; // 同时也是卡片阴影色
+
+  // ---- 状态色 ----
+  --crm-success: #2d9b45;
+
+  // ---- 背景 ----
+  --crm-bg-body: #f2f2f2;
+  --crm-bg-page: #f4f5f7;
+  --crm-bg-white: #ffffff;
+  --crm-bg-hover: #f5f6f8;
+
+  // ---- 卡片阴影（原型所有白色容器统一用它） ----
+  --crm-shadow: 5px 5px 5px var(--crm-border-light);
+
+  // ---------- Element Plus 主题覆写 ----------
+  // EP 2.2+ 暴露了 CSS 变量，直接覆盖比 @forward theme-chalk 简单得多。
+  // light-3/5/7/8/9 是主色按 N/10 与白色混合的结果，dark-2 是主色压暗 20%。
+  --el-color-primary: #2c6ddb;
+  --el-color-primary-light-3: #6b99e6;
+  --el-color-primary-light-5: #96b6ed;
+  --el-color-primary-light-7: #c0d3f4;
+  --el-color-primary-light-8: #d5e2f8;
+  --el-color-primary-light-9: #eaf0fb;
+  --el-color-primary-dark-2: #2357af;
+
+  --el-text-color-primary: #172b4d;
+  --el-text-color-regular: #344563;
+  --el-text-color-secondary: #6b778c;
+  --el-border-color: #dfe1e6;
+  --el-border-color-light: #ebecf0;
+  --el-color-success: #2d9b45;
+}
+
+// ---------- 通用工具类 ----------
+.app-container {
+  padding: 16px;
+}
+
+// 表格上方的搜索/操作栏
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+// 分页统一靠右
+.pagination-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+// 列表页筛选行（对应原型 y=129 那一行：左侧数据范围、右侧导出/高级筛选）
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+// ---------- Element Plus 微调 ----------
+// 组件的具体规格（按钮/表格/输入框/分页）统一放在 styles/element.scss，
+// 这里只留全局性的东西。
+
+// ---------- 路由切换动画 ----------
+//
+// ⚠️ 这里【不能】给对应的 <transition> 加 mode="out-in"。
+//    实测（Vue 3.5.12）：out-in 配合 <component :is> 上会变化的 :key，
+//    离开动画结束后新组件不会被插入，router-view 只剩一个空注释节点，
+//    表现就是点导航后内容区一片空白。改用默认的「新老同时进行」模式做交叉淡入。
+.fade-transform-enter-active,
+.fade-transform-leave-active {
+  transition: opacity 0.25s, transform 0.25s;
+}
+
+// 离场元素脱离文档流：否则新老页面在 250ms 内同时占位，
+// 容器高度瞬间翻倍，会让内容区闪一下滚动条
+.fade-transform-leave-active {
+  position: absolute;
+  inset: var(--crm-content-gap);
+}
+
+.fade-transform-enter-from {
+  opacity: 0;
+  transform: translateX(-16px);
+}
+.fade-transform-leave-to {
+  opacity: 0;
+  transform: translateX(16px);
+}

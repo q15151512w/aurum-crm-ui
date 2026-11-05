@@ -1,0 +1,721 @@
+==============================================================================
+AurumCRM 前端 —— 接口完成情况
+==============================================================================
+生成时间：2026-09-14 21:30
+数据来源：《05-接口文档.md》 ／ src/api/*.js
+
+接口总数        226
+已完成（已接入） 206
+未完成（未接入） 20
+⚠ 前端发了但文档没有 1
+
+说明：
+  · 「已完成」指前端 api 层已经按文档的路径与方法发出了请求，
+    不代表后端已实现 —— 后端目前只有 /health，跑的是 mock。
+  · 「导出」类接口前端已接，但 mock 模式下会提示「接口尚未实现」，
+    这是预期的（导出返回的是文件流，没法造假数据）。
+  · 本文件由 `npm run gen:api-status` 生成，不要手改。
+
+==============================================================================
+一、已完成（前端已接入）  206 个
+==============================================================================
+
+【一、认证模块 /auth】 9 个
+------------------------------------------------------------------------------
+  GET    /auth/captcha
+         获取算术验证码（密码登录前置，见 2.9）
+         前端：src/api/auth.js
+  POST   /auth/email/code
+         发送邮箱验证码（60 秒限流）
+         前端：src/api/auth.js
+  POST   /auth/login
+         密码登录（需带算术验证码，见 2.9）
+         前端：src/api/auth.js
+  POST   /auth/login/email
+         邮箱验证码登录
+         前端：src/api/auth.js
+  POST   /auth/logout
+         退出登录
+         前端：src/api/auth.js
+  GET    /auth/me
+         获取当前用户信息 + 权限 + 菜单
+         前端：src/api/auth.js
+  PUT    /auth/password
+         修改密码
+         前端：src/api/auth.js
+  POST   /auth/password/forgot
+         忘记密码
+         前端：src/api/auth.js
+  POST   /auth/register
+         注册账号
+         前端：src/api/auth.js
+
+【二、系统管理 /system】 62 个
+------------------------------------------------------------------------------
+  POST   /system/dept
+         新增部门
+         前端：src/api/system.js
+  PUT    /system/dept/{id}
+         修改
+         前端：src/api/system.js
+  DELETE /system/dept/{id}
+         删除（有子部门/用户时拒绝）
+         前端：src/api/system.js
+  PUT    /system/dept/{id}/leader
+         设置部门负责人
+         前端：src/api/system.js
+  GET    /system/dept/tree
+         部门树（组织架构页）
+         前端：src/api/system.js
+  GET    /system/dict-data
+         按 `dictType` 查字典项
+         前端：src/api/system.js
+  POST   /system/dict-data
+         新增字典项
+         前端：src/api/system.js
+  PUT    /system/dict-data/{id}
+         修改字典项
+         前端：src/api/system.js
+  DELETE /system/dict-data/{id}
+         删除字典项
+         前端：src/api/system.js
+  GET    /system/dict-data/batch
+         **批量获取多个字典**（前端缓存用）
+         前端：src/api/system.js
+  GET    /system/dict-type
+         字典类型分页
+         前端：src/api/system.js
+  POST   /system/dict-type
+         新增字典类型
+         前端：src/api/system.js
+  PUT    /system/dict-type/{id}
+         修改字典类型
+         前端：src/api/system.js
+  DELETE /system/dict-type/{id}
+         删除字典类型
+         前端：src/api/system.js
+  GET    /system/file/{id}
+         下载
+         前端：src/api/system.js
+  DELETE /system/file/{id}
+         删除（逻辑删除）
+         前端：src/api/system.js
+  POST   /system/file/upload
+         上传。**只传文件本身**，不带业务信息
+         前端：src/api/system.js
+  GET    /system/login-log
+         登录日志（契约见 3.8）
+         前端：src/api/system.js
+  GET    /system/menu/tree
+         菜单树（权限配置用）
+         前端：src/api/system.js
+  GET    /system/notice
+         **我的消息**分页（`receiver_id = 我 OR NULL`，登录即可）🆕
+         前端：src/api/system.js
+  PUT    /system/notice/{id}/read
+         标记单条已读 🆕
+         前端：src/api/system.js
+  GET    /system/notice/manage
+         **公告/通知管理**分页（`notice_type IN (2,3,4)`）🆕
+         前端：src/api/system.js
+  POST   /system/notice/manage
+         发布公告/通知 🆕
+         前端：src/api/system.js
+  PUT    /system/notice/manage/{id}
+         修改公告/通知 🆕
+         前端：src/api/system.js
+  DELETE /system/notice/manage/{id}
+         删除公告/通知（逻辑删除）🆕
+         前端：src/api/system.js
+  PUT    /system/notice/read-all
+         一键全部已读 🆕
+         前端：src/api/system.js
+  GET    /system/notice/unread-count
+         未读数（顶栏红点）🆕
+         前端：src/api/system.js
+  GET    /system/numbering-rule
+         **编号定义**列表（对应原型「编号定义」页）
+         前端：src/api/system.js
+  POST   /system/numbering-rule
+         新增编号规则
+         前端：src/api/system.js
+  PUT    /system/numbering-rule/{id}
+         修改编号规则（**含启停开关**，只传 `enabled` 即可）
+         前端：src/api/system.js
+  DELETE /system/numbering-rule/{id}
+         删除编号规则
+         前端：src/api/system.js
+  GET    /system/operation-log
+         操作日志（契约见 3.8）
+         前端：src/api/system.js
+  GET    /system/role
+         分页查询
+         前端：src/api/system.js
+  POST   /system/role
+         新增角色
+         前端：src/api/system.js
+  GET    /system/role-group
+         角色组列表
+         前端：src/api/system.js
+  POST   /system/role-group
+         新增角色组
+         前端：src/api/system.js
+  DELETE /system/role-group/{id}
+         删除角色组
+         前端：src/api/system.js
+  PUT    /system/role/{id}
+         修改
+         前端：src/api/system.js
+  DELETE /system/role/{id}
+         删除（有用户时拒绝）
+         前端：src/api/system.js
+  GET    /system/role/{id}/permissions
+         查询角色的菜单权限 ID 集合
+         前端：src/api/system.js
+  PUT    /system/role/{id}/permissions
+         **保存权限配置**（菜单树勾选）
+         前端：src/api/system.js
+  GET    /system/role/{id}/users
+         角色下的人员列表
+         前端：src/api/system.js
+  POST   /system/role/{id}/users
+         **选择角色人员**（分配用户到角色）
+         前端：src/api/system.js
+  DELETE /system/role/{id}/users
+         移除角色人员
+         前端：src/api/system.js
+  GET    /system/unit
+         **计量单位**列表（对应原型「计量单位」页）
+         前端：src/api/system.js
+  POST   /system/unit
+         新增计量单位
+         前端：src/api/system.js
+  PUT    /system/unit/{id}
+         修改计量单位
+         前端：src/api/system.js
+  DELETE /system/unit/{id}
+         删除计量单位
+         前端：src/api/system.js
+  GET    /system/unit/simple-list
+         **计量单位选择器**（只返回启用单位，供产品表单/明细编辑器的单位下拉改读）🆕
+         前端：src/api/system.js
+  GET    /system/user
+         分页查询（支持按部门、状态、关键字过滤）
+         前端：src/api/system.js
+  POST   /system/user
+         新增
+         前端：src/api/system.js
+  GET    /system/user/{id}
+         详情
+         前端：src/api/system.js
+  PUT    /system/user/{id}
+         修改
+         前端：src/api/system.js
+  DELETE /system/user/{id}
+         删除
+         前端：src/api/system.js
+  POST   /system/user/{id}/reset-password
+         重置密码
+         前端：src/api/system.js
+  PUT    /system/user/{id}/status
+         **激活 / 禁用 / 操作离职**（三态）
+         前端：src/api/system.js
+  PUT    /system/user/{id}/superior
+         设置直属上级
+         前端：src/api/system.js
+  GET    /system/user/export
+         导出 Excel
+         前端：src/api/system.js
+  POST   /system/user/import
+         批量导入
+         前端：src/api/system.js
+  GET    /system/user/import-template
+         下载导入模板
+         前端：src/api/system.js
+  GET    /system/user/options
+         🆕 **员工选择器（仅需登录，不校验权限点）**。`/simple-list` 的宽松版，返回字段完全相同；供各业务表单的「负责人 / 签约人」下拉使用 —— 那些表单是销售角色在用的，不能要求他们持有「人员管理」权限
+         前端：src/api/system.js
+  GET    /system/user/simple-list
+         **选择器专用**（返回精简字段）。⚠️ 要求 `system:user:list`，种子里只有超管有
+         前端：src/api/system.js
+
+【三、客户模块 /crm】 101 个
+------------------------------------------------------------------------------
+  GET    /crm/contact
+         按 `customerId` 查询
+         前端：src/api/customer.js
+  POST   /crm/contact
+         新增
+         前端：src/api/customer.js
+  PUT    /crm/contact/{id}
+         修改
+         前端：src/api/customer.js
+  DELETE /crm/contact/{id}
+         删除
+         前端：src/api/customer.js
+  PUT    /crm/contact/{id}/primary
+         设为主联系人
+         前端：src/api/customer.js
+  GET    /crm/contract
+         分页查询
+         前端：src/api/contract.js
+  POST   /crm/contract
+         新增
+         前端：src/api/contract.js
+  GET    /crm/contract/{id}
+         详情（含明细）
+         前端：src/api/contract.js
+  PUT    /crm/contract/{id}
+         修改
+         前端：src/api/contract.js
+  DELETE /crm/contract/{id}
+         删除
+         前端：src/api/contract.js
+  GET    /crm/contract/{id}/approval
+         **审批进度**（走到哪一步 / 每步谁审的 / 现在该谁审）⭐
+         前端：src/api/contract.js
+  POST   /crm/contract/{id}/audit
+         **审核**（通过 / 驳回）
+         前端：src/api/contract.js
+  POST   /crm/contract/{id}/star
+         **关注**（幂等）
+         前端：src/api/contract.js
+  DELETE /crm/contract/{id}/star
+         **取消关注**（幂等）
+         前端：src/api/contract.js
+  POST   /crm/contract/{id}/submit
+         **提交审核** ⭐
+         前端：src/api/contract.js
+  POST   /crm/contract/{id}/void
+         作废
+         前端：src/api/contract.js
+  GET    /crm/contract/audit-list
+         **待审核列表**（对应「合同审核」页）
+         前端：src/api/contract.js
+  POST   /crm/contract/batch-audit
+         **批量审核**
+         前端：src/api/contract.js
+  GET    /crm/contract/export
+         导出
+         前端：src/api/contract.js
+  GET    /crm/customer
+         分页查询
+         前端：src/api/customer.js
+  POST   /crm/customer
+         新增客户
+         前端：src/api/customer.js
+  GET    /crm/customer-pool
+         公海列表
+         前端：src/api/customer.js
+  DELETE /crm/customer-pool/{id}
+         删除
+         前端：src/api/customer.js
+  POST   /crm/customer-pool/{id}/assign
+         分配
+         前端：src/api/customer.js
+  POST   /crm/customer-pool/{id}/claim
+         领取 ⚠️ 并发
+         前端：src/api/customer.js
+  GET    /crm/customer-pool/export
+         导出 Excel
+         前端：src/api/customer.js
+  GET    /crm/customer/{id}
+         详情
+         前端：src/api/customer.js
+  PUT    /crm/customer/{id}
+         修改
+         前端：src/api/customer.js
+  DELETE /crm/customer/{id}
+         删除
+         前端：src/api/customer.js
+  GET    /crm/customer/{id}/related
+         **聚合关联数据**（详情页多个 Tab 一次拉取）
+         前端：src/api/customer.js
+  POST   /crm/customer/{id}/star
+         **关注**（幂等）
+         前端：src/api/customer.js
+  DELETE /crm/customer/{id}/star
+         **取消关注**（幂等）
+         前端：src/api/customer.js
+  POST   /crm/customer/{id}/to-pool
+         **放入公海**
+         前端：src/api/customer.js
+  GET    /crm/customer/export
+         导出
+         前端：src/api/customer.js
+  GET    /crm/customer/owner-options
+         **销售负责人下拉选项**（新增/修改/公海分配共用）
+         前端：src/api/customer.js
+  GET    /crm/customer/simple-list
+         选择器专用
+         前端：src/api/customer.js
+  GET    /crm/invoice-info
+         按客户查开票信息
+         前端：src/api/customer.js
+  POST   /crm/invoice-info
+         新增
+         前端：src/api/customer.js
+  PUT    /crm/invoice-info/{id}
+         修改
+         前端：src/api/customer.js
+  DELETE /crm/invoice-info/{id}
+         删除
+         前端：src/api/customer.js
+  PUT    /crm/invoice-info/{id}/default
+         设为默认
+         前端：src/api/customer.js
+  GET    /crm/lead
+         分页查询
+         前端：src/api/lead.js
+  POST   /crm/lead
+         新增线索
+         前端：src/api/lead.js
+  DELETE /crm/lead
+         批量删除
+         前端：src/api/lead.js
+  GET    /crm/lead-pool
+         线索池列表（**等同 `/crm/lead` 查 `ownerUserId IS NULL`**）
+         前端：src/api/lead.js
+  DELETE /crm/lead-pool/{id}
+         删除
+         前端：src/api/lead.js
+  POST   /crm/lead-pool/{id}/assign
+         **分配**给指定负责人
+         前端：src/api/lead.js
+  POST   /crm/lead-pool/{id}/claim
+         **领取**（当前用户） ⚠️ 并发
+         前端：src/api/lead.js
+  GET    /crm/lead-pool/export
+         导出 Excel
+         前端：src/api/lead.js
+  GET    /crm/lead/{id}
+         详情
+         前端：src/api/lead.js
+  PUT    /crm/lead/{id}
+         修改
+         前端：src/api/lead.js
+  DELETE /crm/lead/{id}
+         删除
+         前端：src/api/lead.js
+  POST   /crm/lead/{id}/convert
+         **线索转客户** ⭐
+         前端：src/api/lead.js
+  POST   /crm/lead/{id}/star
+         **关注**（幂等）
+         前端：src/api/lead.js
+  DELETE /crm/lead/{id}/star
+         **取消关注**（幂等）
+         前端：src/api/lead.js
+  POST   /crm/lead/{id}/to-pool
+         **放入线索池**
+         前端：src/api/lead.js
+  GET    /crm/lead/export
+         导出
+         前端：src/api/lead.js
+  GET    /crm/lead/simple-list
+         选择器专用
+         前端：src/api/lead.js
+  GET    /crm/opportunity
+         分页查询
+         前端：src/api/opportunity.js
+  POST   /crm/opportunity
+         新增
+         前端：src/api/opportunity.js
+  GET    /crm/opportunity/{id}
+         详情
+         前端：src/api/opportunity.js
+  PUT    /crm/opportunity/{id}
+         修改
+         前端：src/api/opportunity.js
+  DELETE /crm/opportunity/{id}
+         删除
+         前端：src/api/opportunity.js
+  POST   /crm/opportunity/{id}/products
+         **添加产品**
+         前端：src/api/opportunity.js
+  PUT    /crm/opportunity/{id}/products
+         更新产品明细
+         前端：src/api/opportunity.js
+  PUT    /crm/opportunity/{id}/stage
+         **变更阶段**（会写阶段变更日志）
+         前端：src/api/opportunity.js
+  GET    /crm/opportunity/{id}/stage-log
+         阶段变更历史
+         前端：src/api/opportunity.js
+  POST   /crm/opportunity/{id}/star
+         **关注**（幂等）
+         前端：src/api/opportunity.js
+  DELETE /crm/opportunity/{id}/star
+         **取消关注**（幂等）
+         前端：src/api/opportunity.js
+  GET    /crm/opportunity/export
+         导出 Excel
+         前端：src/api/opportunity.js
+  GET    /crm/opportunity/funnel
+         **销售漏斗统计**（首页看板）
+         前端：src/api/opportunity.js
+  GET    /crm/opportunity/simple-list
+         选择器专用（**每行带 `customerId` 与 `products`**，供合同表单带出客户/产品）
+         前端：src/api/opportunity.js
+  GET    /crm/owner-change-log
+         按业务查流转流水（对应详情页「操作记录」Tab）
+         前端：src/api/customer.js
+  GET    /crm/pool-rule
+         规则列表
+         前端：src/api/customer.js
+  PUT    /crm/pool-rule/{id}
+         修改（回收天数、领取上限、提醒天数）
+         前端：src/api/customer.js
+  GET    /crm/product
+         分页查询
+         前端：src/api/product.js
+  POST   /crm/product
+         新增
+         前端：src/api/product.js
+  POST   /crm/product-category
+         新增分类
+         前端：src/api/product.js
+  PUT    /crm/product-category/{id}
+         修改分类
+         前端：src/api/product.js
+  DELETE /crm/product-category/{id}
+         删除分类
+         前端：src/api/product.js
+  GET    /crm/product-category/export
+         导出 Excel
+         前端：src/api/product.js
+  GET    /crm/product-category/tree
+         产品分类树
+         前端：src/api/product.js
+  GET    /crm/product/{id}
+         详情
+         前端：src/api/product.js
+  PUT    /crm/product/{id}
+         修改
+         前端：src/api/product.js
+  DELETE /crm/product/{id}
+         删除
+         前端：src/api/product.js
+  PUT    /crm/product/{id}/off-shelf
+         **下架**
+         前端：src/api/product.js
+  PUT    /crm/product/{id}/on-shelf
+         **上架**
+         前端：src/api/product.js
+  GET    /crm/product/export
+         导出 Excel
+         前端：src/api/product.js
+  POST   /crm/product/image
+         **上传产品图片**（multipart，字段名 `file`；jpg/jpeg/png/webp/gif，≤5MB；返回 OSS `url`/`objectKey`，不写 `sys_attachment`。详见《08-产品模块接口文档》4.7）
+         前端：src/api/product.js
+  GET    /crm/product/simple-list
+         选择器专用
+         前端：src/api/product.js
+  GET    /crm/quotation
+         分页查询
+         前端：src/api/opportunity.js
+  POST   /crm/quotation
+         新增
+         前端：src/api/opportunity.js
+  GET    /crm/quotation/{id}
+         详情（含明细）
+         前端：src/api/opportunity.js
+  PUT    /crm/quotation/{id}
+         修改
+         前端：src/api/opportunity.js
+  DELETE /crm/quotation/{id}
+         删除
+         前端：src/api/opportunity.js
+  POST   /crm/quotation/{id}/convert-contract
+         **报价单转合同**（报价中/已生成合同；同一报价允许重复生成多份合同）
+         前端：src/api/opportunity.js
+  POST   /crm/quotation/{id}/star
+         **关注**（幂等）
+         前端：src/api/opportunity.js
+  DELETE /crm/quotation/{id}/star
+         **取消关注**（幂等）
+         前端：src/api/opportunity.js
+  POST   /crm/quotation/{id}/void
+         **作废报价单**（仅「报价中」；状态转为「已失效」）
+         前端：src/api/opportunity.js
+  GET    /crm/quotation/export
+         导出 Excel
+         前端：src/api/opportunity.js
+  GET    /crm/quotation/simple-list
+         选择器专用（**每行带 `products` 产品明细 + `opportunityId`/`opportunityName`/`customerId`**；可选按 `opportunityId` / `customerId` 收窄）
+         前端：src/api/opportunity.js
+
+【四、财务模块 /finance】 23 个
+------------------------------------------------------------------------------
+  GET    /finance/invoice
+         分页查询
+         前端：src/api/finance.js
+  POST   /finance/invoice
+         新增发票登记
+         前端：src/api/finance.js
+  GET    /finance/invoice/{id}
+         详情
+         前端：src/api/finance.js
+  PUT    /finance/invoice/{id}
+         修改
+         前端：src/api/finance.js
+  DELETE /finance/invoice/{id}
+         删除
+         前端：src/api/finance.js
+  POST   /finance/invoice/{id}/issue
+         **财务开票**（回填 `invoiceNo`） ⭐
+         前端：src/api/finance.js
+  POST   /finance/invoice/{id}/submit
+         提交审核
+         前端：src/api/finance.js
+  POST   /finance/invoice/{id}/void
+         作废
+         前端：src/api/finance.js
+  GET    /finance/invoice/audit-list
+         待开票列表
+         前端：src/api/finance.js
+  GET    /finance/invoice/export
+         导出
+         前端：src/api/finance.js
+  GET    /finance/payment
+         分页查询
+         前端：src/api/finance.js
+  POST   /finance/payment
+         新增回款登记
+         前端：src/api/finance.js
+  GET    /finance/payment/{id}
+         详情
+         前端：src/api/finance.js
+  PUT    /finance/payment/{id}
+         修改
+         前端：src/api/finance.js
+  DELETE /finance/payment/{id}
+         删除
+         前端：src/api/finance.js
+  POST   /finance/payment/{id}/audit
+         **财务回款审核**
+         前端：src/api/finance.js
+  POST   /finance/payment/{id}/star
+         **关注**（幂等）
+         前端：src/api/finance.js
+  DELETE /finance/payment/{id}/star
+         **取消关注**（幂等）
+         前端：src/api/finance.js
+  POST   /finance/payment/{id}/submit
+         提交审核
+         前端：src/api/finance.js
+  GET    /finance/payment/audit-list
+         待审核列表
+         前端：src/api/finance.js
+  GET    /finance/payment/export
+         导出
+         前端：src/api/finance.js
+  POST   /finance/write-off
+         发票与回款核销
+         前端：src/api/finance.js
+  GET    /finance/write-off
+         核销记录
+         前端：src/api/finance.js
+
+【六、首页与统计 /dashboard】 8 个
+------------------------------------------------------------------------------
+  GET    /dashboard/focus
+         我关注的
+         前端：src/api/dashboard.js
+  GET    /dashboard/funnel
+         —（图表）
+         前端：src/api/dashboard.js
+  GET    /dashboard/messages
+         消息
+         前端：src/api/dashboard.js
+  GET    /dashboard/notices
+         公告 \
+         前端：src/api/dashboard.js
+  GET    /dashboard/shortcuts
+         快捷入口
+         前端：src/api/dashboard.js
+  GET    /dashboard/stats
+         实时数据
+         前端：src/api/dashboard.js
+  GET    /dashboard/todo
+         待办事项
+         前端：src/api/dashboard.js
+  GET    /dashboard/trend
+         —（图表）
+         前端：src/api/dashboard.js
+
+==============================================================================
+二、未完成（文档有、前端未接入）  20 个
+==============================================================================
+
+这些接口在《05-接口文档.md》里有定义，但前端还没发过请求。
+要接的时候记得同时更新本文件（重跑 npm run gen:api-status）。
+
+【一、认证模块 /auth】 1 个
+------------------------------------------------------------------------------
+  PUT    /auth/profile
+         **修改个人资料**（顶栏「个人资料」）🆕
+
+【二、系统管理 /system】 5 个
+------------------------------------------------------------------------------
+  GET    /system/dept/{id}
+         详情
+  POST   /system/menu
+         新增
+  GET    /system/menu/{id}
+         详情
+  PUT    /system/menu/{id}
+         修改
+  DELETE /system/menu/{id}
+         删除
+
+【三、客户模块 /crm】 3 个
+------------------------------------------------------------------------------
+  GET    /crm/customer-share
+         按客户查共享列表
+  POST   /crm/customer-share
+         新增共享（人 / 部门，二选一）
+  DELETE /crm/customer-share/{id}
+         取消共享
+
+【五、审批流 /bpm】 11 个
+------------------------------------------------------------------------------
+  GET    /bpm/flow
+         审批流模板列表
+  POST   /bpm/flow
+         新增模板
+  PUT    /bpm/flow/{id}
+         修改模板
+  DELETE /bpm/flow/{id}
+         删除模板
+  GET    /bpm/flow/{id}/nodes
+         模板节点列表
+  PUT    /bpm/flow/{id}/nodes
+         保存节点配置（顺序、审批人、或签/会签）
+  GET    /bpm/instance
+         我发起的审批
+  GET    /bpm/instance/{bizType}/{bizId}
+         按业务单据查审批进度
+  POST   /bpm/task/{id}/approve
+         **审批**（通过 / 驳回）
+  GET    /bpm/task/done
+         我的已办
+  GET    /bpm/task/todo
+         **我的待办** ⭐
+
+==============================================================================
+三、⚠ 前端发了、但文档里没有完全对应的条目  1 个
+==============================================================================
+
+
+【文档里确实没有】1 个 —— 要么前端路径写错了，要么文档漏了
+------------------------------------------------------------------------------
+  GET /system/login-log/export   (src/api/system.js)
+
+==============================================================================
+附：模块之外的接口
+==============================================================================
+
+  GET    /ai/sessions   我的会话列表，按最后活跃时间倒序
+  GET    /ai/sessions/{id}/messages   某个会话的全部消息（时间正序）
+  DELETE /ai/sessions/{id}   删除会话（消息与索引一起删）

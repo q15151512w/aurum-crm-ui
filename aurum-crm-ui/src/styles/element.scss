@@ -1,0 +1,337 @@
+/**
+ * Element Plus 组件规格覆写
+ *
+ * 全站组件的观感统一在这里改，业务页面不再自己写样式去凑。
+ * 所有数值都是从原型《客户关系管理系统-CRM》的实际渲染结果里读出来的
+ * （用 CDP 读 getComputedStyle + 裁切放大核对），不是估的。
+ *
+ * 原型规格速查：
+ *   主按钮      h36  bg #2C6DDB   radius 4  白字 14px
+ *   次要按钮    h32  bg #EBECF0   radius 4  #172B4D 14px  无边框
+ *   文字按钮    h32  白底          #2C6DDB
+ *   输入框      h32  白底 1px 浅边框  radius 4
+ *   筛选胶囊    h32  radius 4  （选中 #172B4D 白字 / 未选 #EBECF0 #172B4D）
+ *   表头        h48  浅灰底  #172B4D 14px  居中  列间竖分隔线
+ *   数据行      h44  白底  居中
+ */
+
+// =============================================================================
+//  按钮
+// =============================================================================
+// 原型的按钮没有描边，靠底色区分层级；EP 默认是描边风格，这里统一改掉。
+.el-button {
+  height: 32px;
+  padding: 0 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 400;
+  border: none;
+
+  // 默认（次要）按钮：浅灰底
+  &:not(.el-button--primary):not(.el-button--success):not(.el-button--warning):not(
+      .el-button--danger
+    ):not(.el-button--info):not(.is-text):not(.is-link) {
+    background-color: var(--crm-border-light);
+    color: var(--crm-text-primary);
+
+    &:hover,
+    &:focus {
+      background-color: #e0e2e7;
+      color: var(--crm-text-primary);
+    }
+  }
+
+  // 文字按钮：白底 + 主色字（原型「编辑」就是这个）
+  &.is-text {
+    background-color: transparent;
+    color: var(--crm-primary);
+    padding: 0 12px;
+
+    &:hover {
+      background-color: var(--crm-primary-light);
+      color: var(--crm-primary);
+    }
+  }
+
+  // 原型页头的主操作按钮比工具栏按钮高一档（36 vs 32）
+  &.el-button--large {
+    height: 36px;
+    font-size: 14px;
+  }
+
+  &.el-button--small {
+    height: 28px;
+    font-size: 13px;
+  }
+}
+
+// =============================================================================
+//  输入框 / 选择器
+// =============================================================================
+// EP 默认用 box-shadow 模拟边框，好覆盖颜色但高度要单独定
+.el-input__wrapper,
+.el-select__wrapper {
+  min-height: 32px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--crm-border) inset;
+
+  &.is-focus {
+    box-shadow: 0 0 0 1px var(--crm-primary) inset;
+  }
+}
+
+.el-input__inner,
+.el-textarea__inner {
+  font-size: 14px;
+  color: var(--crm-text-primary);
+
+  &::placeholder {
+    color: #a8abb2;
+  }
+}
+
+.el-form-item__label {
+  font-size: 14px;
+  color: var(--crm-text-primary);
+}
+
+// =============================================================================
+//  表格
+// =============================================================================
+.el-table {
+  font-size: 14px;
+  color: var(--crm-text-primary);
+
+  // 表头：浅灰底、48 高、内容居中、列间竖分隔线
+  th.el-table__cell {
+    height: 48px;
+    padding: 0;
+    // 原型表头不是加粗的，就是常规字重
+    font-weight: 400;
+    color: var(--crm-text-primary);
+    background-color: #f2f3f5 !important;
+    border-bottom: none;
+
+    // 列间竖分隔线（最后一列不要）
+    &:not(:last-child) .cell {
+      border-right: 1px solid #e6e7ea;
+    }
+  }
+
+  // 数据行：44 高、白底、居中
+  td.el-table__cell {
+    height: 44px;
+    padding: 0;
+    border-bottom: 1px solid var(--crm-border-light);
+  }
+
+  // 原型所有单元格内容都是居中的（EP 默认左对齐）
+  .cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    line-height: 1.4;
+    // show-overflow-tooltip 依赖 text-overflow，flex 下要显式处理
+    min-width: 0;
+  }
+
+  // 表头的竖分隔线用 flex 后要撑满高度才好看
+  th.el-table__cell .cell {
+    height: 48px;
+  }
+
+  // 名字列用链接色（原型「客户名称」「线索名称」都是蓝的）
+  .el-table__cell .crm-link {
+    color: var(--crm-primary);
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  // 去掉 EP 默认的斑马纹和悬浮高亮在原型里都没有，保留轻微的悬浮即可
+  &.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+    background-color: #fafbfc;
+  }
+}
+
+// 空数据时的占位高度别太夸张
+.el-table__empty-block {
+  min-height: 180px;
+}
+
+// =============================================================================
+//  分页
+// =============================================================================
+.el-pagination {
+  font-size: 13px;
+  color: var(--crm-text-primary);
+  --el-pagination-button-height: 28px;
+  --el-pagination-button-width: 28px;
+
+  .el-pagination__total,
+  .el-pagination__jump,
+  .el-pagination__sizes {
+    font-size: 13px;
+    color: var(--crm-text-primary);
+  }
+}
+
+// =============================================================================
+//  其它
+// =============================================================================
+.el-card {
+  border-radius: 4px;
+  border-color: var(--crm-border-light);
+}
+
+.el-tag {
+  border-radius: 3px;
+}
+
+// 下拉菜单的字号跟原型对齐
+.el-dropdown-menu__item {
+  font-size: 14px;
+}
+
+// =============================================================================
+//  弹窗
+// =============================================================================
+// 原型里没有真弹窗（「新增」是整页跳转的独立 HTML），所以这套规格是**推导**出来的，
+// 不是实测值：按「与按钮/输入框同一套密度」定，标题 16/600 + 分割线，
+// 内容区 24 内边距，底部右对齐按钮行。
+//
+// 宽度由调用方按内容给（ConfigFormDialog 的 width prop），这里只定骨架。
+.el-dialog {
+  border-radius: 4px;
+  padding: 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
+
+  .el-dialog__header {
+    height: 56px;
+    margin: 0;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--crm-border-light);
+  }
+
+  .el-dialog__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--crm-text-primary);
+  }
+
+  .el-dialog__headerbtn {
+    top: 0;
+    width: 56px;
+    height: 56px;
+    font-size: 18px;
+  }
+
+  .el-dialog__body {
+    padding: 24px 24px 8px;
+    font-size: 14px;
+    color: var(--crm-text-primary);
+  }
+
+  .el-dialog__footer {
+    padding: 12px 24px 20px;
+    border-top: 1px solid var(--crm-border-light);
+  }
+}
+
+// 底部按钮容器：右对齐（组件里是个 class="dialog-footer" 的 div）
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.el-overlay {
+  background-color: rgba(0, 0, 0, 0.45);
+}
+
+// =============================================================================
+//  表单
+// =============================================================================
+.el-form-item {
+  margin-bottom: 20px;
+}
+
+// 与 h32 的输入框垂直居中；EP 默认 40px 行高会让标签偏下
+.el-form-item__label {
+  line-height: 32px;
+  font-weight: 400;
+}
+
+.el-form-item__error {
+  padding-top: 2px;
+  font-size: 12px;
+}
+
+// 栅格化表单里控件必须撑满列宽。EP 给日期/数字/级联设了固定宽度，
+// 不撑满的话一行两列会明显参差。
+.el-form-item {
+  .el-date-editor.el-input,
+  .el-input-number,
+  .el-cascader,
+  .el-select,
+  .el-tree-select {
+    width: 100%;
+  }
+}
+
+.el-textarea__inner {
+  min-height: 76px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--crm-border) inset;
+
+  &:focus {
+    box-shadow: 0 0 0 1px var(--crm-primary) inset;
+  }
+}
+
+.el-radio-group,
+.el-checkbox-group {
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.el-radio,
+.el-checkbox {
+  height: 32px;
+  margin-right: 0;
+}
+
+// =============================================================================
+//  选择器弹窗
+// =============================================================================
+.crm-selector-dialog {
+  .el-dialog__body {
+    padding: 16px 20px 8px;
+  }
+}
+
+// =============================================================================
+//  明细行编辑器（报价单 / 合同的产品明细）
+// =============================================================================
+// ⚠️ 上面 .el-table .cell 统一改成了 flex + 居中（列表页只读文本居中才好看），
+//    但明细表里单元格装的是 el-input-number / el-select，
+//    flex 居中会把输入框挤成一小段。这里必须改回块级。
+.crm-items-table {
+  .cell {
+    display: block;
+    padding: 0 4px;
+  }
+
+  td.el-table__cell {
+    padding: 6px 0;
+  }
+}
